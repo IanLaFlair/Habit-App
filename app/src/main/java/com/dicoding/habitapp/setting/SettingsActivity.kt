@@ -3,6 +3,7 @@ package com.dicoding.habitapp.setting
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.preference.ListPreference
 import androidx.preference.PreferenceFragmentCompat
 import com.dicoding.habitapp.R
 
@@ -25,8 +26,14 @@ class SettingsActivity : AppCompatActivity() {
             setPreferencesFromResource(R.xml.root_preferences, rootKey)
 
             //TODO 11 : Update theme based on value in ListPreference
-
-
+            val pref = findPreference<ListPreference>(getString(R.string.pref_key_dark))
+            pref?.setOnPreferenceChangeListener { _, newValue ->
+                when(newValue){
+                    "OFF" -> updateTheme(AppCompatDelegate.MODE_NIGHT_NO)
+                    "ON" -> updateTheme(AppCompatDelegate.MODE_NIGHT_YES)
+                    else -> updateTheme(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
+                }
+            }
         }
 
         private fun updateTheme(mode: Int): Boolean {
