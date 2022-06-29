@@ -29,8 +29,8 @@ class SettingsActivity : AppCompatActivity() {
             val pref = findPreference<ListPreference>(getString(R.string.pref_key_dark))
             pref?.setOnPreferenceChangeListener { _, newValue ->
                 when(newValue){
-                    "OFF" -> updateTheme(AppCompatDelegate.MODE_NIGHT_NO)
-                    "ON" -> updateTheme(AppCompatDelegate.MODE_NIGHT_YES)
+                    "off" -> updateTheme(AppCompatDelegate.MODE_NIGHT_NO)
+                    "on" -> updateTheme(AppCompatDelegate.MODE_NIGHT_YES)
                     else -> updateTheme(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
                 }
             }

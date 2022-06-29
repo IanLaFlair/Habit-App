@@ -10,6 +10,9 @@ import com.dicoding.habitapp.data.Habit
 import com.dicoding.habitapp.data.HabitRepository
 import com.dicoding.habitapp.utils.Event
 import com.dicoding.habitapp.utils.HabitSortType
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class HabitListViewModel(private val habitRepository: HabitRepository) : ViewModel() {
 
@@ -40,6 +43,9 @@ class HabitListViewModel(private val habitRepository: HabitRepository) : ViewMod
     }
 
     fun insert(habit: Habit) {
-        habitRepository.insertHabit(habit)
+        CoroutineScope(Dispatchers.IO).launch {
+            habitRepository.insertHabit(habit)
+
+        }
     }
 }

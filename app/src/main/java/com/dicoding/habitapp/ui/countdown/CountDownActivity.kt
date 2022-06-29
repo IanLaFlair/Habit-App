@@ -21,6 +21,8 @@ class CountDownActivity : AppCompatActivity() {
     private lateinit var txtCountdown: TextView
     private lateinit var btnStart: Button
     private lateinit var btnStop: TextView
+    val wm = WorkManager.getInstance(this)
+    private lateinit var oneTimeWork: OneTimeWorkRequest
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,28 +46,23 @@ class CountDownActivity : AppCompatActivity() {
         viewModel.currentTimeString.observe(this){
             txtCountdown.text = it
         }
-        viewModel.setInitialTime(habit.minutesFocus)
-        viewModel.eventCountDownFinish.observe(this) {
-            updateButtonState(it)
-        }
-
-        //TODO 13 : Start and cancel One Time Request WorkManager to notify when time is up.
-
-
-        val wm = WorkManager.getInstance(this)
         val data = Data.Builder()
             .putInt(HABIT_ID, habit.id)
             .putString(NOTIFICATION_CHANNEL_ID, habit.title)
             .build()
-        val oneTimeWork = OneTimeWorkRequest.Builder(NotificationWorker::class.java)
+        oneTimeWork = OneTimeWorkRequest.Builder(NotificationWorker::class.java)
             .setInputData(data)
             .build()
+        viewModel.setInitialTime(habit.minutesFocus)
+        viewModel.eventCountDownFinish.observe(this) {
+            updateButtonState(false)
+            wm.enqueue(oneTimeWork)
+        }
 
-
+        //TODO 13 : Start and cancel One Time Request WorkManager to notify when time is up.
         findViewById<Button>(R.id.btn_start).setOnClickListener {
             viewModel.startTimer()
             updateButtonState(true)
-            wm.enqueue(oneTimeWork)
         }
 
         findViewById<Button>(R.id.btn_stop).setOnClickListener {
