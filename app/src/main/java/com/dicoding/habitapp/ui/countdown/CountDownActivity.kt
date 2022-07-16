@@ -11,10 +11,7 @@ import androidx.work.WorkManager
 import com.dicoding.habitapp.R
 import com.dicoding.habitapp.data.Habit
 import com.dicoding.habitapp.notification.NotificationWorker
-import com.dicoding.habitapp.utils.HABIT
-import com.dicoding.habitapp.utils.HABIT_ID
-import com.dicoding.habitapp.utils.NOTIFICATION_CHANNEL_ID
-import com.dicoding.habitapp.utils.NOTIF_UNIQUE_WORK
+import com.dicoding.habitapp.utils.*
 
 class CountDownActivity : AppCompatActivity() {
 
@@ -48,7 +45,7 @@ class CountDownActivity : AppCompatActivity() {
         }
         val data = Data.Builder()
             .putInt(HABIT_ID, habit.id)
-            .putString(NOTIFICATION_CHANNEL_ID, habit.title)
+            .putString(HABIT_TITLE, habit.title)
             .build()
         oneTimeWork = OneTimeWorkRequest.Builder(NotificationWorker::class.java)
             .setInputData(data)

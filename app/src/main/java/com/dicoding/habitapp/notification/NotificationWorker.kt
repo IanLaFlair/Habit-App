@@ -6,7 +6,9 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.os.Build
+import android.util.Log
 import androidx.core.app.NotificationCompat
+import androidx.core.content.ContextCompat
 import androidx.work.Worker
 import androidx.work.WorkerParameters
 import com.dicoding.habitapp.R
@@ -38,13 +40,18 @@ class NotificationWorker(ctx: Context, params: WorkerParameters) : Worker(ctx, p
 
     private fun notificationSetup(pendingIntent: PendingIntent){
         val notifManager = applicationContext.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        val title = habitTitle
+        Log.d("Title",title.toString())
         val builder = NotificationCompat.Builder(applicationContext, NOTIFICATION_CHANNEL_ID)
-            .setContentIntent(pendingIntent)
             .setSmallIcon(R.drawable.ic_notifications)
-            .setContentTitle(habitTitle)
+            .setContentTitle(title.toString())
             .setContentText(applicationContext.getString(R.string.notify_content))
+            .setColor(ContextCompat.getColor(applicationContext, android.R.color.transparent))
+            .setVibrate(longArrayOf(1000, 1000, 1000, 1000, 1000))
             .setAutoCancel(true)
-            .setOngoing(true)
+            .setContentIntent(pendingIntent)
+            .setPriority(NotificationCompat.PRIORITY_HIGH)
+            .setDefaults(NotificationCompat.DEFAULT_ALL)
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
             val channel = NotificationChannel(NOTIFICATION_CHANNEL_ID, HABIT, NotificationManager.IMPORTANCE_DEFAULT)
